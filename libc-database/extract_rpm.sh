@@ -8,7 +8,8 @@ if rpm2cpio "$rpm_file" 2>"$err_file" | cpio -id --quiet 2>>"$err_file"; then
 fi
 if grep -q "4GB" "$err_file"; then
   rm -f "$err_file"
-  rpm2archive "$rpm_file" && tar xzf "${rpm_file}.tgz" && rm -f "${rpm_file}.tgz"
+  # rpm2archive 4.18+ (Ubuntu Noble) writes to stdout by default
+  rpm2archive "$rpm_file" | tar xzf -
   exit $?
 fi
 cat "$err_file" >&2
